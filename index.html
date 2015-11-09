@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery-fieldselection.js"></script>
+    </head>
+    <body>
+        <textarea id="content"></textarea>
+        <script>
+            oCanvas = document.createElement("canvas");
+            oTextArea = $("#content");
+            oTextArea.css("line-height", "20px");
+            function getLine(text, index){
+                part = text.substring(0, index);
+                lineNum = part.split("\n").length
+                return lineNum;
+            }
+
+            function update(){
+                var text = oTextArea.val();
+                if (text.length){
+                    var lines = text.split("\n");
+                    var selection = oTextArea.getSelection();
+                    var index = selection.end;
+                    var lineNum = getLine(text, index);
+                    var line = lines[lineNum - 1];
+
+                    var context = oCanvas.getContext("2d");
+                    context.save();
+                    context.clearRect(0, 0, oCanvas.width, oCanvas.height);
+                    var measure = context.measureText(line);
+                    var w = parseInt(measure.width);
+
+                    var fontSize   = oTextArea.css("font-size");
+                    var lineHeight = parseInt(oTextArea.css("line-height"));
+                    var font = [oTextArea.css("font-weight"), fontSize + '/' + lineHeight, oTextArea.css("font-family")].join(" ");
+                    context.font = font;
+
+                    var x = w;
+                    var y = lineNum * lineHeight;
+
+                    console.log(x, y);
+                }
+        }
+
+            oTextArea.keyup(update).mouseup(update).scroll(update);
+        </script>
+    </body>
+</html>
